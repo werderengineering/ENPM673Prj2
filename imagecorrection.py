@@ -30,3 +30,21 @@ def cameraParamsPt2():
     D = np.array([-2.42565104e-01, -4.77893070e-02, -1.31388084e-03, -8.79107779e-05, 2.20573263e-02])
 
     return K,D
+
+def adjustSaturation(frame,hue,sat):
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+
+    hsv=hue*hsv+sat
+    frame = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
+
+    return frame
+
+def adjustContrast(frame, contrast):
+
+        f = 131 * (contrast + 127) / (127 * (131 - contrast))
+        alpha_c = f
+        gamma_c = 127 * (1 - f)
+
+        frame = cv2.addWeighted(frame, alpha_c, frame, 0, gamma_c)
+
+        return frame
