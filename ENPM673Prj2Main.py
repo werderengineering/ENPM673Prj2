@@ -20,7 +20,7 @@ def main(prgRun):
     problem = 2
 
     #Correct image
-    if problem ==1:
+    if problem == 1:
 
         video = cv2.VideoCapture('Night Drive - 2689.mp4')
 
@@ -68,23 +68,22 @@ def main(prgRun):
 
             ##########################Correct frame###########################
 
-            ############################Histogram Equalization################
+            ############################ Histogram Equalization ################
 
             #####################Homography and dewarp########################
             homo = HomoCalculation.homo()
             """the next line give you a flat view of current frame"""
             img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
-            ####################Contour#######################################
+            #################### Contour #######################################
 
-            ###################Hough##########################################
+            ################### Histogram on y axis ##########################################
 
-            ###################Homography and Impose##########################
+            ################### Homography and Impose ##########################
 
             if flag:
                 cv2.imshow('unwarped video', img_unwarped)
                 if cv2.waitKey(25) & 0xFF == ord('q'):
                     break
-
 
 
     #Lane Finder Challenge vid
@@ -110,7 +109,9 @@ def main(prgRun):
             ####################Contour#######################################
 
             #####################Homography and dewarp########################
-
+            homo = HomoCalculation.homo()
+            """the next line give you a flat view of current frame"""
+            img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
             ###################Hough##########################################
 
             ###################Homography and Impose##########################

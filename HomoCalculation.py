@@ -56,4 +56,4 @@ def homo():
                      [5.80470942e-19, -4.42069468e-03, 1.00000000e+00]])
 
 # eyeballLaneCorners()
-# debug()
+debug()
