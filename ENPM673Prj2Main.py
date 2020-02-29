@@ -38,7 +38,8 @@ def main(prgRun):
             # frame= cv2.add(frame,np.array([100.0]))
             # frame=frame*5
 
-            frame=adjust_gamma(frame, 5)
+            frame=adjust_gamma(frame, 4)
+
 
 
 
