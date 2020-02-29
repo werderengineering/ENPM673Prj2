@@ -17,7 +17,7 @@ flag = True
 prgRun = True
 
 def main(prgRun):
-    problem=1
+    problem = 2
 
     #Correct image
     if problem ==1:
