@@ -13,10 +13,11 @@ print('Imports Complete')
 print('CV2 version')
 print(cv2.__version__)
 
+flag = True
 prgRun = True
 
 def main(prgRun):
-    problem=3
+    problem = 2
 
     #Correct image
     if problem ==1:
@@ -45,7 +46,6 @@ def main(prgRun):
             frame=adjustContrast(frame, contrast)
             frame = cv2.bilateralFilter(frame, 15, 75, 75)
 
-
             cv2.imshow('DWF', frame)
             # Press Q on keyboard to  exit
             if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -53,39 +53,37 @@ def main(prgRun):
 
 
     #Lane finder Image set
-    elif problem ==2:
-        directory='./data'
+    elif problem == 2:
+        directory = './data'
         # directory=str(input('What is the name of the folder with the images? Note, this should be entered as"/folder": \n'))
 
-        print(directory)
+        print("Getting images from " + str(directory))
+        imageList = imagefiles(directory)  # get a stack of images
 
-        imageList=imagefiles(directory)
-
+        """process each image individually"""
         for i in range(len(imageList)):
-
-            frameDir=directory+'/'+imageList[i]
+            frameDir = directory + '/' + imageList[i]
             frame=cv2.imread(frameDir)
-            frame = imutils.resize(frame, height=180,width=320)
-
-            homo = HomoCalculation.homoToResCenter(img_gray.shape)
-
-            img_unwarped = cv2.warpPerspective(img_gray, homo, (img_gray.shape[0], img_gray.shape[1]))
+            # frame = imutils.resize(frame, width=320, height=180)
 
             ##########################Correct frame###########################
 
             ############################Histogram Equalization################
 
-            ####################Contour#######################################
-
             #####################Homography and dewarp########################
+            homo = HomoCalculation.homo()
+            """the next line give you a flat view of current frame"""
+            img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
+            ####################Contour#######################################
 
             ###################Hough##########################################
 
             ###################Homography and Impose##########################
 
-            cv2.imshow('image', frame)
-            if cv2.waitKey(25) & 0xFF == ord('q'):
-                break
+            if flag:
+                cv2.imshow('unwarped video', img_unwarped)
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    break
 
 
 
@@ -100,15 +98,12 @@ def main(prgRun):
             ret, frame = video.read()
             if ret == True:
                 frame = imutils.resize(frame, width=320, height=180)
-                frame=frame[int(frame.shape[0]/2)+15:,:]
                 ogframe = frame
                 clnframe = frame
                 resetframe = frame
 
-
             ##########################Correct frame###########################
-                binaryframe=yellowAndWhite(frame)
-                # frame=binaryframe
+
             ############################Histogram Equalization################
 
 
@@ -120,15 +115,10 @@ def main(prgRun):
 
             ###################Homography and Impose##########################
 
-
-
-
-                cv2.imshow('working frame', binaryframe)
-                cv2.imshow('DWF', frame)
-                # Press Q on keyboard to  exit
-                if cv2.waitKey(25) & 0xFF == ord('q'):
-                    break
-
+            cv2.imshow('DWF', clnframe)
+            # Press Q on keyboard to  exit
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                break
 
 
     prgRun=False
