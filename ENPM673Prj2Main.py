@@ -16,7 +16,7 @@ print(cv2.__version__)
 prgRun = True
 
 def main(prgRun):
-    problem=1
+    problem=3
 
     #Correct image
     if problem ==1:
@@ -46,10 +46,6 @@ def main(prgRun):
             frame = cv2.bilateralFilter(frame, 15, 75, 75)
 
 
-
-
-
-
             cv2.imshow('DWF', frame)
             # Press Q on keyboard to  exit
             if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -69,7 +65,7 @@ def main(prgRun):
 
             frameDir=directory+'/'+imageList[i]
             frame=cv2.imread(frameDir)
-            frame = imutils.resize(frame, width=320, height=180)
+            frame = imutils.resize(frame, height=180,width=320)
 
             homo = HomoCalculation.homoToResCenter(img_gray.shape)
 
@@ -104,15 +100,15 @@ def main(prgRun):
             ret, frame = video.read()
             if ret == True:
                 frame = imutils.resize(frame, width=320, height=180)
+                frame=frame[int(frame.shape[0]/2)+15:,:]
                 ogframe = frame
                 clnframe = frame
                 resetframe = frame
 
+
             ##########################Correct frame###########################
-
-
-
-
+                binaryframe=yellowAndWhite(frame)
+                # frame=binaryframe
             ############################Histogram Equalization################
 
 
@@ -127,10 +123,12 @@ def main(prgRun):
 
 
 
-            cv2.imshow('DWF', clnframe)
-            # Press Q on keyboard to  exit
-            if cv2.waitKey(25) & 0xFF == ord('q'):
-                break
+                cv2.imshow('working frame', binaryframe)
+                cv2.imshow('DWF', frame)
+                # Press Q on keyboard to  exit
+                if cv2.waitKey(25) & 0xFF == ord('q'):
+                    break
+
 
 
     prgRun=False

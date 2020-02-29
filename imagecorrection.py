@@ -48,3 +48,22 @@ def adjustContrast(frame, contrast):
         frame = cv2.addWeighted(frame, alpha_c, frame, 0, gamma_c)
 
         return frame
+
+def yellowAndWhite(frame):
+    grayframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    whitemask = cv2.inRange(grayframe, 200, 255)
+    grayframe = cv2.bitwise_or(grayframe, grayframe, mask=whitemask)
+
+    # yellow mask
+    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    low_val = (21, 39, 64)
+    high_val = (40, 255, 255)
+    mask = cv2.inRange(hsv, low_val, high_val)
+    frame = cv2.bitwise_or(hsv, hsv, mask=mask)
+    frame = cv2.cvtColor(frame, cv2.COLOR_HSV2BGR)
+    yellowframe = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    frame = yellowframe + grayframe
+    whitemask = cv2.inRange(frame, 150, 255)
+    frame = cv2.bitwise_or(frame, frame, mask=whitemask)
+
+    return frame
