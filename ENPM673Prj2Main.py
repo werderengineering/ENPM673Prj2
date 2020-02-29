@@ -65,11 +65,8 @@ def main(prgRun):
             frame=cv2.imread(frameDir)
 
             ##########################Correct frame###########################
-            # I added this fucntion
+
             ############################Histogram Equalization################
-
-
-            #I fixed your fucntion check it out
 
             ####################Contour#######################################
 
