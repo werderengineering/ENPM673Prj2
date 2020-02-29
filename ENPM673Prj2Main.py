@@ -5,6 +5,7 @@ import imutils
 import math
 
 from imageFileNames import imagefiles
+from imagecorrection import *
 
 
 print('Imports Complete')
@@ -15,7 +16,7 @@ print(cv2.__version__)
 prgRun = True
 
 def main(prgRun):
-    problem = 2
+    problem=1
 
     #Correct image
     if problem ==1:
@@ -33,18 +34,17 @@ def main(prgRun):
                 resetframe = frame
 
             ##########################Correct frame###########################
+            # increase brightness
+            # frame= cv2.add(frame,np.array([100.0]))
+            # frame=frame*5
 
-            ############################Histogram Equalization################
+            frame=adjust_gamma(frame, 4)
 
-            ####################Contour#######################################
 
-            #####################Homography and dewarp########################
-            # I did this
-            ###################Hough##########################################
 
-            ###################Homography and Impose##########################
 
-            cv2.imshow('DWF', clnframe)
+
+            cv2.imshow('DWF', frame)
             # Press Q on keyboard to  exit
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
