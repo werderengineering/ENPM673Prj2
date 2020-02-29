@@ -5,6 +5,7 @@ import imutils
 import math
 
 from imageFileNames import imagefiles
+from imagecorrection import *
 
 
 print('Imports Complete')
@@ -34,8 +35,13 @@ def main(prgRun):
 
             ##########################Correct frame###########################
             # increase brightness
-            frame= cv2.add(frame,np.array([100.0]))
-            frame=frame*5
+            # frame= cv2.add(frame,np.array([100.0]))
+            # frame=frame*5
+
+            frame=adjust_gamma(frame, 5)
+
+
+
 
             cv2.imshow('DWF', frame)
             # Press Q on keyboard to  exit
