@@ -28,17 +28,23 @@ def main(prgRun):
             # Capture frame-by-frame
             ret, frame = video.read()
             if ret == True:
-                frame = imutils.resize(frame, width=320)
+                frame = imutils.resize(frame, width=320, height=180)
+                frame.shape
                 ogframe = frame
                 clnframe = frame
                 resetframe = frame
 
             ##########################Correct frame###########################
-            # increase brightness
-            # frame= cv2.add(frame,np.array([100.0]))
-            # frame=frame*5
+            gamma=5
+            sat=5
+            hue=1
+            contrast = 60
 
-            frame=adjust_gamma(frame, 4)
+            frame = adjust_gamma(frame, gamma)
+            frame=adjustSaturation(frame, hue,sat)
+            frame=adjustContrast(frame, contrast)
+            frame = cv2.bilateralFilter(frame, 15, 75, 75)
+
 
 
 
@@ -63,6 +69,8 @@ def main(prgRun):
 
             frameDir=directory+'/'+imageList[i]
             frame=cv2.imread(frameDir)
+            frame = imutils.resize(frame, width=320, height=180)
+
 
             ##########################Correct frame###########################
 
@@ -92,7 +100,7 @@ def main(prgRun):
             # Capture frame-by-frame
             ret, frame = video.read()
             if ret == True:
-                frame = imutils.resize(frame, width=320)
+                frame = imutils.resize(frame, width=320, height=180)
                 ogframe = frame
                 clnframe = frame
                 resetframe = frame
