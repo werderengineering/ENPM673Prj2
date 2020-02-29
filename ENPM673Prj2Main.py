@@ -68,7 +68,8 @@ def main(prgRun):
             # I added this fucntion
             ############################Histogram Equalization################
 
-            ###HI
+
+            #I fixed your fucntion check it out
 
             ####################Contour#######################################
 
