@@ -64,9 +64,17 @@ def main(prgRun):
             frameDir=directory+'/'+imageList[i]
             frame=cv2.imread(frameDir)
 
+            ##########################Correct frame###########################
 
+            ############################Histogram Equalization################
 
+            ####################Contour#######################################
 
+            #####################Homography and dewarp########################
+
+            ###################Hough##########################################
+
+            ###################Homography and Impose##########################
 
             cv2.imshow('image', frame)
             if cv2.waitKey(25) & 0xFF == ord('q'):
