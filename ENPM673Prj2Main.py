@@ -41,7 +41,7 @@ def main(prgRun):
             contrast = 60
 
             frame = adjust_gamma(frame, gamma)
-            frame=adjustSaturation(frame, hue,sat)
+            frame = adjustSaturation(frame, hue, sat)
             frame=adjustContrast(frame, contrast)
             frame = cv2.bilateralFilter(frame, 15, 75, 75)
 
@@ -71,6 +71,9 @@ def main(prgRun):
             frame=cv2.imread(frameDir)
             frame = imutils.resize(frame, width=320, height=180)
 
+            homo = HomoCalculation.homoToResCenter(img_gray.shape)
+
+            img_unwarped = cv2.warpPerspective(img_gray, homo, (img_gray.shape[0], img_gray.shape[1]))
 
             ##########################Correct frame###########################
 
