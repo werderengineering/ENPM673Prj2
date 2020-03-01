@@ -69,7 +69,7 @@ def main(prgRun):
             # frame = imutils.resize(frame, width=320, height=180)
 
             ##########################Correct frame###########################
-            result=process_image(frame)
+            region=process_image(frame)
             ############################Histogram Equalization################
 
             #####################Homography and dewarp########################
@@ -82,7 +82,7 @@ def main(prgRun):
 
             ###################Homography and Impose##########################
 
-            cv2.imshow('Nicks Work', result)
+            cv2.imshow('Nicks Work', region)
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
 
