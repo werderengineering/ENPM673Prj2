@@ -124,9 +124,9 @@ def main(prgRun):
 
                 ##########################Correct frame###########################
                 binaryframe = yellowAndWhite(frame)
+                # frame=binaryframe
                 ############################Histogram Equalization################
                 region = process_image(binaryframe)
-
 
 
 
