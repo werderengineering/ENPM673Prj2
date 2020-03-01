@@ -8,6 +8,7 @@ from imagecorrection import *
 import HomoCalculation
 from HistorgramOfLanePixels import *
 from fitlines import *
+import random
 
 from regionOfInterest import *
 
@@ -86,26 +87,34 @@ def main(prgRun):
 
             ####################Contour#######################################
             cnts, hierarchy = cv2.findContours(flatfieldBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-            cv2.imshow('flatfield', flatfieldBinary)
-            cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
+
+            bincntframe = cv2.drawContours(flatfieldBinary, cnts,-5, (255), 5)
+            cv2.imshow('flatfield binary', bincntframe)
+
+            # cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
 
             ###################Draw Lines##########################################
             # hist=historgramOnYAxis(grayframe)
 
-            #
-            # Xright=np.ones(frame.shape[0])*150
-            #
-            # Xleft=np.ones(frame.shape[0])*50
-            # yframe=np.arange(0,frame.shape[0])
-            #
-            # Leftlines=fitThemLines(Xleft,yframe,3)
-            #
-            #
-            #
-            # Rightlines = fitThemLines(Xright, yframe, 3)
-            #
-            # Linesdrawn = cv2.polylines(flatBGR, [pts], True, (0, 255, 255))
-            #
+            check=frame.shape
+            check2=flatBGR.shape
+
+
+
+            Xright=np.ones(flatBGR.shape[0])*int(flatBGR.shape[1]*2/3)+random.randint(-10, 10)
+            Xleft=np.ones(flatBGR.shape[0])*int(flatBGR.shape[1]/3)+random.randint(-10, 10)
+
+
+            yframe=np.arange(0,frame.shape[1])
+
+            Leftlines=fitThemLines(Xleft,yframe,3)
+
+            Rightlines = fitThemLines(Xright, yframe, 3)
+
+            LeftLinesdrawn = cv2.polylines(flatBGR, [Leftlines], True, (0, 0, 255),5)
+            AllLinesdrawn = cv2.polylines(flatBGR, [Rightlines], True, (255, 0, 0),5)
+
+
 
 
 
@@ -114,7 +123,7 @@ def main(prgRun):
 
 
             ###################Output Imagery##########################
-            cv2.imshow('CntFrame', cntframe)
+            cv2.imshow('Working Frame', LeftLinesdrawn)
 
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
