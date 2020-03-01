@@ -129,11 +129,11 @@ def pipeline(input_image):
 
     # Canny
     low_threshold = 100
-    high_threshold = 200
+    high_threshold = 255
     edges = canny(gau, low_threshold, high_threshold)
 
     imshape = image.shape
-    vertices = np.array([[(0, imshape[0]), (400, 330), (570, 330), (imshape[1], imshape[0])]], dtype=np.int32)
+    vertices = np.array([[(0, imshape[0]), (150, 330), (800, 250), (imshape[1], imshape[0])]], dtype=np.int32)
     region = region_of_interest(edges, vertices)
 
     # rho = 1  # distance resolution in pixels of the Hough grid

@@ -1,12 +1,12 @@
 import numpy as np
 import cv2
-from __main__ import *
 import imutils
 import math
 
 from imageFileNames import imagefiles
 from imagecorrection import *
 import HomoCalculation
+from HistorgramOfLanePixels import *
 
 from regionOfInterest import *
 
@@ -69,20 +69,33 @@ def main(prgRun):
             # frame = imutils.resize(frame, width=320, height=180)
 
             ##########################Correct frame###########################
-            region=process_image(frame)
-            ############################Histogram Equalization################
 
+            ##########################Thresh frame###########################
+            grayframe=grayscale(frame)
+            binaryframe = yellowAndWhite(frame)
+            ############################Region ################
+            region = process_image(binaryframe)
             #####################Homography and dewarp########################
-            # homo = HomoCalculation.homo()
-            # """the next line give you a flat view of current frame"""
-            # img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
-            ####################Contour#######################################
+            homo = HomoCalculation.homo()
+            """the next line give you a flat view of current frame"""
+            flatfieldBinary = cv2.warpPerspective(region, homo, (frame.shape[0], frame.shape[1]))
+            flatBGR= cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
 
-            ###################Hough##########################################
+
+            ####################Contour#######################################
+            cnts, hierarchy = cv2.findContours(flatfieldBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+            cv2.imshow('flatfield', flatfieldBinary)
+            cntframe = cv2.drawContours(flatBGR, cnts, , (255, 0, 0), 5)
+
+            ###################Draw Lines##########################################
+            # hist=historgramOnYAxis(grayframe)
+
 
             ###################Homography and Impose##########################
 
-            cv2.imshow('Nicks Work', region)
+            cv2.imshow('CntFrame', cntframe)
+
+
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
 
@@ -111,9 +124,9 @@ def main(prgRun):
 
                 ##########################Correct frame###########################
                 binaryframe = yellowAndWhite(frame)
-                # frame=binaryframe
                 ############################Histogram Equalization################
                 region = process_image(binaryframe)
+
 
 
 
