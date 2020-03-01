@@ -12,6 +12,9 @@ def historgramOnYAxis(img_gray):
     return hist
 
 
+def peaks(hist):
+    return 0
+
 def debug():
     img_path = "./data/0000000000.png"
     img = cv2.imread(img_path)

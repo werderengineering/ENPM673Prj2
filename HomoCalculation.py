@@ -28,7 +28,7 @@ def debug():
     """
     first show the whole process of manually adjust the corners from the lane used to compute homo
     second show the resultant unwarp image"""
-    data_choice = 2
+    data_choice = 1
     img_path = None
     corners_warped = None
     corners_unwarped = None
@@ -44,14 +44,18 @@ def debug():
     """adjust the corners of lane on target image"""
     if data_choice == 1:
         corners_warped = [(512, 325), (760, 325), (886, 470), (274, 470)]  # four corners on lane
-        corners_unwarped = perspective.rectangle(54, 200)  # width and height of rectangle (108, 400)
-        offset = np.array([img_gray.shape[0] / 2, img_gray.shape[1] / 2 + 235]).astype(
+        width = 54
+        length = 200  # longer side of rectangle
+        corners_unwarped = perspective.rectangle(width, length)  # width and height of rectangle (108, 400)
+        offset = np.array([img_gray.shape[0] / 2, img_gray.shape[1] - length * (2.3)]).astype(
             int)  # where the rectangle to be on dest image
         corners_unwarped, _ = perspective.shiftToASpot(corners_unwarped, offset)
     elif data_choice == 2:
         corners_warped = [(598, 495), (758, 495), (876, 592), (462, 592)]
-        corners_unwarped = perspective.rectangle(108, 400)
-        offset = np.array([img_gray.shape[0] / 2, img_gray.shape[1] / 2 + 65]).astype(
+        width = 108
+        length = 400  # longer side of rectangle
+        corners_unwarped = perspective.rectangle(width, length)
+        offset = np.array([img_gray.shape[0] / 2, img_gray.shape[1] - length * (4 / 3)]).astype(
             int)  # where the rectangle to be on dest image
         corners_unwarped, _ = perspective.shiftToASpot(corners_unwarped, offset)
 
@@ -68,15 +72,15 @@ def debug():
 
 
 def homo_problem2():
-    return np.array([[-3.52198203e-01, -1.26771921e+00, 5.24205004e+02],
-                     [4.33025034e-16, -4.12125334e+00, 1.07911878e+03],
+    return np.array([[-9.50935147e-02, -1.16842361e+00, 3.28415351e+02],
+                     [5.70016176e-16, -5.16453728e+00, 1.31511878e+03],
                      [5.80470942e-19, -4.42069468e-03, 1.00000000e+00]])
 
 
 def homo_problem3():
-    return np.array([[-9.50548952e-02, -8.38508302e-01, 4.28812884e+02],
-                     [2.45588742e-17, -2.66645495e+00, 1.24878006e+03],
-                     [3.00026378e-20, -2.30469104e-03, 1.00000000e+00]])
+    return np.array([[[-9.50548952e-02, -8.38508302e-01, 4.28812884e+02],
+                      [2.57889823e-17, -2.76094728e+00, 1.28978006e+03],
+                      [3.00026378e-20, -2.30469104e-03, 1.00000000e+00]]])
 
 # eyeballLaneCorners_challengeVideo()
 # eyeballLaneCorners()
