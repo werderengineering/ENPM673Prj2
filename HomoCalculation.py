@@ -44,10 +44,10 @@ def debug():
     """adjust the corners of lane on target image"""
     if data_choice == 1:
         corners_warped = [(512, 325), (760, 325), (886, 470), (274, 470)]  # four corners on lane
-        width = 54
-        length = 200  # longer side of rectangle
+        width = 108
+        length = 400  # longer side of rectangle
         corners_unwarped = perspective.rectangle(width, length)  # width and height of rectangle (108, 400)
-        offset = np.array([img_gray.shape[0] / 2, img_gray.shape[1] - length * (2.3)]).astype(
+        offset = np.array([img_gray.shape[0] / 2, img_gray.shape[1] - length * (17 / 12)]).astype(
             int)  # where the rectangle to be on dest image
         corners_unwarped, _ = perspective.shiftToASpot(corners_unwarped, offset)
     elif data_choice == 2:
@@ -72,8 +72,8 @@ def debug():
 
 
 def homo_problem2():
-    return np.array([[-9.50935147e-02, -1.16842361e+00, 3.28415351e+02],
-                     [5.70016176e-16, -5.16453728e+00, 1.31511878e+03],
+    return np.array([[-1.90187029e-01, -1.20514938e+00, 4.00830702e+02],
+                     [5.36923043e-16, -5.73597280e+00, 1.59123755e+03],
                      [5.80470942e-19, -4.42069468e-03, 1.00000000e+00]])
 
 
@@ -82,6 +82,4 @@ def homo_problem3():
                       [2.57889823e-17, -2.76094728e+00, 1.28978006e+03],
                       [3.00026378e-20, -2.30469104e-03, 1.00000000e+00]]])
 
-# eyeballLaneCorners_challengeVideo()
-# eyeballLaneCorners()
 # debug()
