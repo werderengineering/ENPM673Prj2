@@ -16,9 +16,20 @@ def historgramOnYAxis(img_gray):
     return hist
 
 
-def peaks(hist):
+def findLeftAndRightPoints(img_gray):
+    hist = historgramOnYAxis(img_gray)
 
-    return 0
+    ignoreRegion = 80  # how many pixel rows to be ignore around the highest value pixel
+
+    index_first = np.argmax(hist)
+    hist_noFirstPeak = hist.copy()
+    hist_noFirstPeak[index_first - ignoreRegion: index_first + ignoreRegion] = 0
+    index_second = np.argmax(hist_noFirstPeak)
+
+    if (index_first < index_second):
+        return index_first, index_second
+    else:
+        return index_second, index_first
 
 def debug():
     img_path = "./flatfieldBinary.png"
@@ -42,8 +53,6 @@ def debug():
     ax[1].plot(x, hist_noFirstPeak)
     ax[1].set(xlabel="rows", ylabel="mean pixel value of the row",
               title="Histogram without" + str(ignoreRegion) + "highest peak")
-
     plt.show()
 
-
-debug()
+# debug()
