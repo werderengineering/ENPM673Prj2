@@ -73,9 +73,9 @@ def main(prgRun):
             ############################Histogram Equalization################
 
             #####################Homography and dewarp########################
-            # homo = HomoCalculation.homo()
-            # """the next line give you a flat view of current frame"""
-            # img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
+            homo = HomoCalculation.homo_problem2()
+            """the next line give you a flat view of current frame"""
+            img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
             ####################Contour#######################################
 
             ###################Hough##########################################

@@ -18,5 +18,4 @@ def debug():
     img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     historgramOnYAxis(img_gray)
 
-
-debug()
+# debug()
