@@ -8,7 +8,7 @@ def square(side=200):
     return np.array([[0, 0], [side, 0], [side, side], [0, side]])
 
 
-def rectangle(short=108, long=400):
+def rectangle(short=200, long=400):
     """return four corner of square, the point vector is in row"""
     return np.array([[0, 0], [short, 0], [short, long], [0, long]])
 
