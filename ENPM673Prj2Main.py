@@ -8,16 +8,18 @@ from imageFileNames import imagefiles
 from imagecorrection import *
 import HomoCalculation
 
+from regionOfInterest import *
+
 print('Imports Complete')
 
 print('CV2 version')
 print(cv2.__version__)
 
-flag = True
+flag = False
 prgRun = True
 
 def main(prgRun):
-    problem = 3
+    problem = 2
 
     #Correct image
     if problem ==1:
@@ -67,18 +69,22 @@ def main(prgRun):
             # frame = imutils.resize(frame, width=320, height=180)
 
             ##########################Correct frame###########################
-
+            result=process_image(frame)
             ############################Histogram Equalization################
 
             #####################Homography and dewarp########################
-            homo = HomoCalculation.homo()
-            """the next line give you a flat view of current frame"""
-            img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
+            # homo = HomoCalculation.homo()
+            # """the next line give you a flat view of current frame"""
+            # img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
             ####################Contour#######################################
 
             ###################Hough##########################################
 
             ###################Homography and Impose##########################
+
+            cv2.imshow('Nicks Work', result)
+            if cv2.waitKey(25) & 0xFF == ord('q'):
+                break
 
             if flag:
                 cv2.imshow('unwarped video', img_unwarped)
@@ -107,21 +113,23 @@ def main(prgRun):
                 binaryframe = yellowAndWhite(frame)
                 # frame=binaryframe
                 ############################Histogram Equalization################
+                region = process_image(binaryframe)
+
 
 
                 ####################Contour#######################################
 
                 #####################Homography and dewarp########################
-                homo = HomoCalculation.homo()
-                """the next line give you a flat view of current frame"""
-                img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
+                # homo = HomoCalculation.homo()
+                # """the next line give you a flat view of current frame"""
+                # img_unwarped = cv2.warpPerspective(frame, homo, (frame.shape[0], frame.shape[1]))
                 ###################Hough##########################################
 
                 ###################Homography and Impose##########################
 
-                cv2.imshow('Original frame', frame)
+                cv2.imshow('Original frame', region)
                 cv2.imshow('Working frame', binaryframe)
-                cv2.imshow('Flat frame', img_unwarped)
+                # cv2.imshow('Flat frame', img_unwarped)
 
                 # Press Q on keyboard to  exit
                 if cv2.waitKey(25) & 0xFF == ord('q'):
