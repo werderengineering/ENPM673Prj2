@@ -209,3 +209,10 @@ def projectionMatrix(intrinsic_camera_matrix, homo):
     homogeneousTransformationMatrix = np.hstack([r, t])
     perjectionMatrix = np.dot(intrinsic_camera_matrix, homogeneousTransformationMatrix)
     return perjectionMatrix / perjectionMatrix[2, 3]
+
+
+def invHomo(homo):
+    assert homo.shape == (3, 3)
+    homo_inv = np.linalg.inv(homo)
+    homo_inv = homo_inv / homo_inv[2, 2]
+    return homo_inv

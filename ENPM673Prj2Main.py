@@ -9,7 +9,7 @@ import HomoCalculation
 from HistorgramOfLanePixels import *
 from fitlines import *
 import random
-
+import perspective
 from regionOfInterest import *
 
 print('Imports Complete')
@@ -88,43 +88,31 @@ def main(prgRun):
             ####################Contour#######################################
             cnts, hierarchy = cv2.findContours(flatfieldBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-            bincntframe = cv2.drawContours(flatfieldBinary, cnts,-5, (255), 5)
+            bincntframe = cv2.drawContours(flatfieldBinary, cnts, -5, 255, 5)
             cv2.imshow('flatfield binary', bincntframe)
 
             # cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
 
             ###################Draw Lines##########################################
-            # hist=historgramOnYAxis(grayframe)
+            left, right = findLeftAndRightPoints(bincntframe)
 
-            check=frame.shape
-            check2=flatBGR.shape
-
+            check = frame.shape
+            check2 = flatBGR.shape
 
 
             Xright=np.ones(flatBGR.shape[0])*int(flatBGR.shape[1]*2/3)+random.randint(-10, 10)
             Xleft=np.ones(flatBGR.shape[0])*int(flatBGR.shape[1]/3)+random.randint(-10, 10)
-
-
             yframe=np.arange(0,frame.shape[1])
-
             Leftlines=fitThemLines(Xleft,yframe,3)
-
             Rightlines = fitThemLines(Xright, yframe, 3)
-
             LeftLinesdrawn = cv2.polylines(flatBGR, [Leftlines], True, (0, 0, 255),5)
-            AllLinesdrawn = cv2.polylines(flatBGR, [Rightlines], True, (255, 0, 0),5)
-
-
-
-
-
-
+            AllLinesdrawn = cv2.polylines(LeftLinesdrawn, [Rightlines], True, (255, 0, 0), 5)
             ###################Homography and Impose##########################
-
-
+            AllLinesdrawn_warped = cv2.warpPerspective(AllLinesdrawn, perspective.invHomo(homo),
+                                                       (frame.shape[1], frame.shape[0]))
             ###################Output Imagery##########################
             cv2.imshow('Working Frame', LeftLinesdrawn)
-
+            cv2.imshow("d", AllLinesdrawn_warped)
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
