@@ -94,36 +94,18 @@ def main(prgRun):
             # cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
 
             ###################Draw Lines##########################################
-            # hist=historgramOnYAxis(grayframe)
 
-            check=frame.shape
-            check2=flatBGR.shape
-
-
-
-            Xright=np.ones(flatBGR.shape[0])*int(flatBGR.shape[1]*2/3)+random.randint(-10, 10)
-            Xleft=np.ones(flatBGR.shape[0])*int(flatBGR.shape[1]/3)+random.randint(-10, 10)
-
-
-            yframe=np.arange(0,frame.shape[1])
-
-            Leftlines=fitThemLines(Xleft,yframe,3)
-
-            Rightlines = fitThemLines(Xright, yframe, 3)
-
-            LeftLinesdrawn = cv2.polylines(flatBGR, [Leftlines], True, (0, 0, 255),5)
-            AllLinesdrawn = cv2.polylines(flatBGR, [Rightlines], True, (255, 0, 0),5)
-
-
-
-
-
+            flatBGRLanes,LeftLines,RightLines=MarkLanes(bincntframe, flatBGR, frame)
 
             ###################Homography and Impose##########################
 
+            # homo=np.linalg.inv(homo)
+            # FinalBGR= cv2.warpPerspective(flatBGR, homo, (frame.shape[0], frame.shape[1]))
+
 
             ###################Output Imagery##########################
-            cv2.imshow('Working Frame', LeftLinesdrawn)
+            cv2.imshow('Working Frame', flatBGRLanes)
+            cv2.imshow('Final Frame', frame)
 
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
