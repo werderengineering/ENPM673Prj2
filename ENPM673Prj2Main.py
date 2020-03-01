@@ -7,6 +7,7 @@ from imageFileNames import imagefiles
 from imagecorrection import *
 import HomoCalculation
 from HistorgramOfLanePixels import *
+from fitlines import *
 
 from regionOfInterest import *
 
@@ -19,7 +20,7 @@ flag = False
 prgRun = True
 
 def main(prgRun):
-    problem = 3
+    problem = 2
 
     #Correct image
     if problem ==1:
@@ -48,6 +49,7 @@ def main(prgRun):
             frame=adjustContrast(frame, contrast)
             frame = cv2.bilateralFilter(frame, 15, 75, 75)
 
+            ###################Output Imagery##########################
             cv2.imshow('DWF', frame)
             # Press Q on keyboard to  exit
             if cv2.waitKey(25) & 0xFF == ord('q'):
@@ -90,9 +92,28 @@ def main(prgRun):
             ###################Draw Lines##########################################
             # hist=historgramOnYAxis(grayframe)
 
+            #
+            # Xright=np.ones(frame.shape[0])*150
+            #
+            # Xleft=np.ones(frame.shape[0])*50
+            # yframe=np.arange(0,frame.shape[0])
+            #
+            # Leftlines=fitThemLines(Xleft,yframe,3)
+            #
+            #
+            #
+            # Rightlines = fitThemLines(Xright, yframe, 3)
+            #
+            # Linesdrawn = cv2.polylines(flatBGR, [pts], True, (0, 255, 255))
+            #
+
+
+
 
             ###################Homography and Impose##########################
 
+
+            ###################Output Imagery##########################
             cv2.imshow('CntFrame', cntframe)
 
 
@@ -135,24 +156,35 @@ def main(prgRun):
 
                 ####################Contour#######################################
                 cnts, hierarchy = cv2.findContours(flatfieldBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                cv2.imshow('flatfield', flatfieldBinary)
+                # cv2.imshow('flatfield', flatfieldBinary)
                 cntframe = cv2.drawContours(flatBGR, cnts, -5, (255, 0, 0), 5)
 
                 ###################Draw Lines##########################################
                 # hist=historgramOnYAxis(grayframe)
+                # testpoints=np.array
+
 
                 ###################Homography and Impose##########################
 
-                cv2.imshow('Original frame', frame)
-                cv2.imshow('Working frame', binaryframe)
+
+
+                ###################Output Imagery##########################
+
+                frame = imutils.resize(frame, width=320, height=180)
+                cntframe = imutils.resize(cntframe, width=320, height=180)
+                flatfieldBinary = imutils.resize(flatfieldBinary, width=320, height=180)
+
+
+                # cv2.imshow('Original frame', frame)
+                cv2.imshow('Working frame', cntframe)
                 cv2.imshow('Flat frame', flatfieldBinary)
 
                 # Press Q on keyboard to  exit
                 if cv2.waitKey(25) & 0xFF == ord('q'):
                     break
-
-
+    cv2.destroyAllWindows()
     prgRun=False
+    return prgRun
 
 
 
@@ -161,9 +193,10 @@ def main(prgRun):
 
 
 print('Function Initializations complete')
-prgRun = True
+
 if __name__ == '__main__':
     print('Start')
+    prgRun = True
     while prgRun == True:
         prgRun = main(prgRun)
 
