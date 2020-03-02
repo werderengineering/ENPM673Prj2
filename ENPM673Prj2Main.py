@@ -135,8 +135,10 @@ def main(prgRun):
                 resetframe = frame
 
                 ##########################Correct frame###########################
-                binaryframe = yellowAndWhite(frame)
 
+                ##########################Thresh frame###########################
+                grayframe = grayscale(frame)
+                binaryframe = yellowAndWhite(frame)
                 ############################Region ################
                 region = process_image(binaryframe)
                 #####################Homography and dewarp########################
@@ -147,28 +149,25 @@ def main(prgRun):
 
                 ####################Contour#######################################
                 cnts, hierarchy = cv2.findContours(flatfieldBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-                # cv2.imshow('flatfield', flatfieldBinary)
-                cntframe = cv2.drawContours(flatBGR, cnts, -5, (255, 0, 0), 5)
+
+                bincntframe = cv2.drawContours(flatfieldBinary, cnts, -5, (255), 5)
+                cv2.imshow('flatfield binary', bincntframe)
+
+                # cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
 
                 ###################Draw Lines##########################################
-                # hist=historgramOnYAxis(grayframe)
-                # testpoints=np.array
 
+                flatBGRLanes, LeftLines, RightLines = MarkLanes(bincntframe, flatBGR, frame)
 
                 ###################Homography and Impose##########################
 
-
+                # homo=np.linalg.inv(homo)
+                # FinalBGR= cv2.warpPerspective(flatBGR, homo, (frame.shape[0], frame.shape[1]))
 
                 ###################Output Imagery##########################
+                cv2.imshow('Working Frame', flatBGRLanes)
+                cv2.imshow('Final Frame', frame)###################Output Imagery##########################
 
-                frame = imutils.resize(frame, width=320, height=180)
-                cntframe = imutils.resize(cntframe, width=320, height=180)
-                flatfieldBinary = imutils.resize(flatfieldBinary, width=320, height=180)
-
-
-                # cv2.imshow('Original frame', frame)
-                cv2.imshow('Working frame', cntframe)
-                cv2.imshow('Flat frame', flatfieldBinary)
 
                 # Press Q on keyboard to  exit
                 if cv2.waitKey(25) & 0xFF == ord('q'):
