@@ -65,6 +65,7 @@ def main(prgRun):
         print("Getting images from " + str(directory))
         imageList = imagefiles(directory)  # get a stack of images
         homo = HomoCalculation.homo_problem2()
+        homo_inv = perspective.invHomo(homo)
         """process each image individually"""
         for i in range(len(imageList)):
             frameDir = directory + '/' + imageList[i]
@@ -88,25 +89,22 @@ def main(prgRun):
             ####################Contour#######################################
             cnts, hierarchy = cv2.findContours(flatfieldBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
-            bincntframe = cv2.drawContours(flatfieldBinary, cnts,-5, (255), 5)
+            bincntframe = cv2.drawContours(flatfieldBinary, cnts, -5, 255, 5)
             cv2.imshow('flatfield binary', bincntframe)
 
             # cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
 
             ###################Draw Lines##########################################
+            LanesDrawn, LeftLines, RightLines = MarkLanes(bincntframe, flatBGR, frame)
 
-            flatBGRLanes,LeftLines,RightLines=MarkLanes(bincntframe, flatBGR, frame)
-
-            ###################Homography and Impose##########################
-
-            # homo=np.linalg.inv(homo)
-            # FinalBGR= cv2.warpPerspective(flatBGR, homo, (frame.shape[0], frame.shape[1]))
-
+            leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[250:1200]
+            rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[250:1200]
+            frame_lane = cv2.polylines(frame, [leftLane_warped], False, (0, 0, 255), 5)
+            frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (0, 255, 0), 5)
 
             ###################Output Imagery##########################
-            cv2.imshow('Working Frame', flatBGRLanes)
-            cv2.imshow('Final Frame', frame)
-
+            cv2.imshow('Working Frame', LanesDrawn)
+            cv2.imshow("d", frame_lane)
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
@@ -123,6 +121,7 @@ def main(prgRun):
 
         video = cv2.VideoCapture('challenge_video.mp4')
         homo = HomoCalculation.homo_problem3()
+        homo_inv = perspective.invHomo(homo)
         # Read until video is completed
         while (video.isOpened()):
             # Capture frame-by-frame
@@ -163,8 +162,13 @@ def main(prgRun):
 
                 ###################Homography and Impose##########################
 
-                # homo=np.linalg.inv(homo)
-                # FinalBGR= cv2.warpPerspective(flatBGR, homo, (frame.shape[0], frame.shape[1]))
+                ###################Draw Lines##########################################
+                LanesDrawn, LeftLines, RightLines = MarkLanes(bincntframe, flatBGR, frame)
+
+                leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[250:1200]
+                rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[250:1200]
+                frame_lane = cv2.polylines(frame, [leftLane_warped], False, (0, 0, 255), 5)
+                frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (0, 255, 0), 5)
 
                 ###################Output Imagery##########################
                 cv2.imshow('Working Frame', flatBGRLanes)
