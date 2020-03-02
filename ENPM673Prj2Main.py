@@ -21,7 +21,7 @@ flag = False
 prgRun = True
 
 def main(prgRun):
-    problem = 3
+    problem = 2
 
     #Correct image
     if problem ==1:
@@ -95,7 +95,7 @@ def main(prgRun):
             # cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
 
             ###################Draw Lines##########################################
-            LanesDrawn, LeftLines, RightLines = MarkLanes(bincntframe, flatBGR, frame)
+            LanesDrawn, LeftLines, RightLines, Turning = MarkLanes(bincntframe, flatBGR, frame)
 
             leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[250:1200]
             rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[250:1200]
@@ -163,7 +163,7 @@ def main(prgRun):
                 ###################Homography and Impose##########################
 
                 ###################Draw Lines##########################################
-                LanesDrawn, LeftLines, RightLines = MarkLanes(bincntframe, flatBGR, frame)
+                LanesDrawn, LeftLines, RightLines, Turning = MarkLanes(bincntframe, flatBGR, frame)
 
                 leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[250:1200]
                 rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[250:1200]
@@ -172,7 +172,7 @@ def main(prgRun):
 
                 ###################Output Imagery##########################
                 cv2.imshow('Working Frame', flatBGRLanes)
-                cv2.imshow('Final Frame', frame)###################Output Imagery##########################
+                cv2.imshow('Final Frame', frame)
 
 
                 # Press Q on keyboard to  exit

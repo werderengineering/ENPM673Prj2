@@ -21,6 +21,10 @@ def fitThemLines(x, y, n,allpoints):
 
 
 def MarkLanes(bincntframe,flatBGR,frame):
+
+    Tweight=0
+    Mweight=0
+    Bweight=0
     bincntframeTop = bincntframe[:int(bincntframe.shape[0] / 3), :]
     bincntframeMid = bincntframe[int(bincntframe.shape[0] / 3):int(bincntframe.shape[0] * 2 / 3), :]
     bincntframeBot = bincntframe[int(bincntframe.shape[0] * 2 / 3):, :]
@@ -29,12 +33,22 @@ def MarkLanes(bincntframe,flatBGR,frame):
                         int((int(bincntframe.shape[0] / 3) + int(bincntframe.shape[0] * 2 / 3)) / 2),
                         int((int(bincntframe.shape[0] * 2 / 3) + bincntframe.shape[0]) / 2)]).T
 
-    LeftT, RightT = findLeftAndRightPoints(bincntframeTop)
-    LeftM, RightM = findLeftAndRightPoints(bincntframeTop)
-    LeftB, RightB = findLeftAndRightPoints(bincntframeTop)
+    LeftTotal, RightTotal = findLeftAndRightPoints(bincntframe)
 
-    Xright = np.array([RightT, RightM, RightB]).T
-    Xleft = np.array([LeftT, LeftM, LeftB]).T
+    LeftT, RightT = findLeftAndRightPoints(bincntframeTop)
+    LeftM, RightM = findLeftAndRightPoints(bincntframeMid)
+    LeftB, RightB = findLeftAndRightPoints(bincntframeBot)
+
+    Xright = np.array([RightT * Tweight, RightM * Mweight, RightB * Bweight])
+    Xleft = np.array([LeftT * Tweight, LeftM * Mweight, LeftB * Bweight])
+    #
+    # Xright = (((np.array([RightT*Tweight, RightM*Mweight, RightB*Bweight])-RightTotal)*.1)+RightTotal).T.astype(int)
+    # Xleft = (((np.array([LeftT*Tweight, LeftM*Mweight, LeftB*Bweight])-LeftTotal)*.1)+LeftTotal).T.astype(int)
+
+    MidTop=RightT-LeftT
+    MidBot=RightB-LeftB
+
+    Turning=MidTop-MidBot
 
     wholeframe = np.arange(0, frame.shape[1])
 
@@ -42,8 +56,8 @@ def MarkLanes(bincntframe,flatBGR,frame):
 
     Rightlines = fitThemLines(Xright, ypoints, 3, wholeframe)
 
-    flatBGR = cv2.polylines(flatBGR, [Leftlines], True, (0, 0, 255), 5)
-    MarkedLanes = cv2.polylines(flatBGR, [Rightlines], True, (255, 0, 0), 5)
+    flatBGR = cv2.polylines(flatBGR, [Leftlines], False, (0, 0, 255), 5)
+    MarkedLanes = cv2.polylines(flatBGR, [Rightlines], False, (255, 0, 0), 5)
 
 
-    return MarkedLanes,Leftlines,Rightlines
+    return MarkedLanes,Leftlines,Rightlines,Turning
