@@ -21,7 +21,7 @@ flag = False
 prgRun = True
 
 def main(prgRun):
-    problem = 2
+    problem = 3
 
     #Correct image
     if problem ==1:
@@ -142,6 +142,8 @@ def main(prgRun):
                 ############################Region ################
                 region = process_image(binaryframe)
                 #####################Homography and dewarp########################
+
+                #check
 
                 """the next line give you a flat view of current frame"""
                 flatfieldBinary = cv2.warpPerspective(region, homo, (frame.shape[0], frame.shape[1]))
