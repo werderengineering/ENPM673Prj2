@@ -5,7 +5,7 @@ from HistorgramOfLanePixels import *
 
 def fitThemLines(x, y, n,allpoints):
 
-    lines=np.polyfit(y,x, 4,True)
+    lines=np.polyfit(y,x, 2,True)
     lines=np.poly1d(lines)
 
 
@@ -71,27 +71,6 @@ def MarkLanes(bincntframe,flatBGR,frame):
 
     Turning =(RightDiferential-LeftDiferential)
 
-    # LeftTop=LeftDiferential[len(LeftDiferential)-1]
-    # RightTop=RightDiferential[len(RightDiferential)-1]
-    # LeftBot = LeftDiferential[0]
-    # RightBot = RightDiferential[0]
-    #
-    #
-    # TopDiff=RightTop-LeftTop
-    # BotDiff=RightBot-LeftBot
-    #
-    # if abs(TopDiff-BotDiff)<=2:
-    #     print('Straight')
-    #
-    # elif TopDiff>BotDiff:
-    #     print('Turning Right')
-    #
-    # elif TopDiff<BotDiff:
-    #     print('Turning Left')
-    # print('\nTop',TopDiff)
-    # print('Bottom', BotDiff)
-    # print('\n')
-    # print('Turning difference',Turning)
     LeftlinesM=Leftlines[200:1100]
     RightlinesM = Rightlines[200:1100]
 
@@ -102,31 +81,44 @@ def MarkLanes(bincntframe,flatBGR,frame):
     return MarkedLanes,Leftlines,Rightlines, Turning
 
 
-def CheckTurn(Right,Left):
-    Right=Right[:,0]
-    Left=Left[:,0]
+def CheckTurn(Right,Left,frame):
+    RightX=Right[:,0]
+    LeftX=Left[:,0]
+    RightY = Right[:, 1]
+    LeftY = Left[:, 1]
 
-    LeftBot = Left[len(Left) - 200]
-    RightBot = Right[len(Right) - 200]
-    LeftTop = Left[0]
-    RightTop = Right[0]
+    wholeframe = np.arange(0, frame.shape[1])
 
-    TopDiff = RightTop - LeftTop
-    BotDiff = RightBot - LeftBot
 
-    if abs(TopDiff - BotDiff) <= 2:
-        print('Straight')
-        Turning=0
+    LeftBotX = LeftX[len(LeftX) - 200]
+    RightBotX = RightX[len(RightX) - 200]
+    LeftTopX = LeftX[0]
+    RightTopX = RightX[0]
 
-    elif TopDiff > BotDiff:
+    LeftBotY = LeftY[len(LeftY) - 200]
+    RightBotY = RightY[len(RightY) - 200]
+    LeftTopY = LeftY[0]
+    RightTopY = RightY[0]
+
+
+
+    MidTopX=int((LeftTopX+RightTopX)/2)
+    MidBotX=int((LeftBotX+RightBotX)/2)
+
+    MidTopY = int((LeftTopY + RightTopY) / 2)
+    MidBotY = int((LeftBotY + RightBotY) / 2)
+
+    MidX=np.array([MidTopX,MidBotX])
+    MidY=np.array([MidTopY,MidBotY])
+
+    MidLine, MidDifferntial = fitThemLines(MidX, MidY, 3, wholeframe)
+    Gradiantset=np.gradient(MidLine[:,0])
+    Gradiant=np.abs(np.sum(Gradiantset,axis=0))
+
+    if Gradiant <len(Gradiantset):
         print('Turning Right')
-        Turning=1
-
-    elif TopDiff < BotDiff:
+    elif Gradiant >=len(Gradiantset):
         print('Turning Left')
-        Turning=-1
 
-    print('\nTop', TopDiff)
-    print('Bottom', BotDiff)
-    print('\n')
-    return Turning
+
+    return MidLine

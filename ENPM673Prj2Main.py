@@ -23,7 +23,7 @@ flag = False
 prgRun = True
 
 def main(prgRun):
-    problem = 3
+    problem = 2
 
     #Correct image
     if problem ==1:
@@ -102,8 +102,12 @@ def main(prgRun):
 
             leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[250:1200]
             rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[250:1200]
-            frame_lane = cv2.polylines(frame, [leftLane_warped], False, (0, 0, 255), 5)
-            frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (0, 255, 0), 5)
+
+            Turning = CheckTurn(rightLane_warped, leftLane_warped, frame)[300:1000]
+
+            MidLane = cv2.polylines(frame, [Turning], False, (0, 255, 0), 5)
+            frame_lane = cv2.polylines(MidLane, [leftLane_warped], False, (0, 0, 255), 5)
+            frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (255, 0, 0), 5)
 
             ###################Output Imagery##########################
             frame_lane = imutils.resize(frame_lane, width=320, height=180)
@@ -172,10 +176,10 @@ def main(prgRun):
                 leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[100:1100]
                 rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[100:1100]
 
-                Turning=CheckTurn(rightLane_warped,leftLane_warped)
+                Turning=CheckTurn(rightLane_warped,leftLane_warped,frame)[500:1000]
 
-
-                frame_lane = cv2.polylines(frame, [leftLane_warped], False, (0, 0, 255), 5)
+                MidLane = cv2.polylines(frame, [Turning], False, (0, 255, 0), 5)
+                frame_lane = cv2.polylines(MidLane, [leftLane_warped], False, (0, 0, 255), 5)
                 frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (255, 0, 0), 5)
 
                 ###################Output Imagery##########################
