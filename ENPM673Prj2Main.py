@@ -11,6 +11,8 @@ from fitlines import *
 import random
 import perspective
 from regionOfInterest import *
+import warnings
+warnings.simplefilter('ignore', np.RankWarning)
 
 print('Imports Complete')
 
@@ -21,7 +23,7 @@ flag = False
 prgRun = True
 
 def main(prgRun):
-    problem = 2
+    problem = 3
 
     #Correct image
     if problem ==1:
@@ -90,7 +92,7 @@ def main(prgRun):
             cnts, hierarchy = cv2.findContours(flatfieldBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
             bincntframe = cv2.drawContours(flatfieldBinary, cnts, -5, 255, 5)
-            cv2.imshow('flatfield binary', bincntframe)
+            # cv2.imshow('flatfield binary', bincntframe)
 
             # cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
 
@@ -103,6 +105,9 @@ def main(prgRun):
             frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (0, 255, 0), 5)
 
             ###################Output Imagery##########################
+            frame_lane = imutils.resize(frame_lane, width=320, height=180)
+            LanesDrawn = imutils.resize(LanesDrawn, width=320, height=180)
+
             cv2.imshow('Working Frame', LanesDrawn)
             cv2.imshow("d", frame_lane)
 
@@ -152,27 +157,30 @@ def main(prgRun):
                 cnts, hierarchy = cv2.findContours(flatfieldBinary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
                 bincntframe = cv2.drawContours(flatfieldBinary, cnts, -5, (255), 5)
-                cv2.imshow('flatfield binary', bincntframe)
+                # cv2.imshow('flatfield binary', bincntframe)
 
                 # cntframe = cv2.drawContours(flatBGR, cnts,-5, (255, 0, 0), 5)
 
                 ###################Draw Lines##########################################
 
-                flatBGRLanes, LeftLines, RightLines = MarkLanes(bincntframe, flatBGR, frame)
 
-                ###################Homography and Impose##########################
+                LanesDrawn, LeftLines, RightLines, null = MarkLanes(bincntframe, flatBGR, frame)
 
-                ###################Draw Lines##########################################
-                LanesDrawn, LeftLines, RightLines, Turning = MarkLanes(bincntframe, flatBGR, frame)
+                leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[100:1100]
+                rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[100:1100]
 
-                leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[250:1200]
-                rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[250:1200]
+                Turning=CheckTurn(rightLane_warped,leftLane_warped)
+
+
                 frame_lane = cv2.polylines(frame, [leftLane_warped], False, (0, 0, 255), 5)
-                frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (0, 255, 0), 5)
+                frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (255, 0, 0), 5)
 
                 ###################Output Imagery##########################
-                cv2.imshow('Working Frame', flatBGRLanes)
-                cv2.imshow('Final Frame', frame)
+                LanesDrawn = imutils.resize(LanesDrawn, width=320, height=180)
+                cv2.imshow('Working Frame', LanesDrawn)
+
+                frame_lane = imutils.resize(frame_lane, width=320, height=180)
+                cv2.imshow('Final Frame', frame_lane)
 
 
                 # Press Q on keyboard to  exit
