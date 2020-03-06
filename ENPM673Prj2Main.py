@@ -23,7 +23,8 @@ flag = False
 prgRun = True
 
 def main(prgRun):
-    problem = 2
+    problem = 3
+    problem = int(input('Which part would you like to run? \nEnter 1 for ngihtime image . \nEnter 2 for the firt part of the lane finder. \nEnter 3 for the second part of the lane finder (Challenge video): '))
 
     #Correct image
     if problem ==1:
@@ -40,6 +41,7 @@ def main(prgRun):
                 ogframe = frame
                 clnframe = frame
                 resetframe = frame
+                cv2.imshow('Original Frame', frame)
 
             ##########################Correct frame###########################
             gamma=5
@@ -62,7 +64,7 @@ def main(prgRun):
     #Lane finder Image set
     elif problem == 2:
         directory = './data'
-        # directory=str(input('What is the name of the folder with the images? Note, this should be entered as"/folder": \n'))
+        directory=str(input('What is the name and directory of the folder with the images? Note, this should be entered as"./folder_name if on Windows": \n'))
 
         print("Getting images from " + str(directory))
         imageList = imagefiles(directory)  # get a stack of images
@@ -99,6 +101,7 @@ def main(prgRun):
 
             ###################Draw Lines##########################################
             LanesDrawn, LeftLines, RightLines, Turning = MarkLanes(bincntframe, flatBGR, frame)
+            # cv2.imshow('Flafield Lanes', LanesDrawn)
 
             leftLane_warped = perspective.perspectiveTransfer_coord(LeftLines, homo_inv)[250:1200]
             rightLane_warped = perspective.perspectiveTransfer_coord(RightLines, homo_inv)[250:1200]
@@ -110,11 +113,11 @@ def main(prgRun):
             frame_lane = cv2.polylines(frame_lane, [rightLane_warped], False, (255, 0, 0), 5)
 
             ###################Output Imagery##########################
-            frame_lane = imutils.resize(frame_lane, width=320, height=180)
-            LanesDrawn = imutils.resize(LanesDrawn, width=320, height=180)
+            # frame_lane = imutils.resize(frame_lane, width=320, height=180)
+            # LanesDrawn = imutils.resize(LanesDrawn, width=320, height=180)
 
             cv2.imshow('Working Frame', LanesDrawn)
-            cv2.imshow("d", frame_lane)
+            cv2.imshow("Imposed Lane Lines", frame_lane)
 
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
