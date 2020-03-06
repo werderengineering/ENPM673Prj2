@@ -75,7 +75,8 @@ def main(prgRun):
             # frame = imutils.resize(frame, width=320, height=180)
 
             ##########################Correct frame###########################
-
+            K, D = cameraParamsPt2()
+            frame = cv2.undistort(frame, K, D, None, K)
             ##########################Thresh frame###########################
             grayframe=grayscale(frame)
             binaryframe = yellowAndWhite(frame)
@@ -139,6 +140,8 @@ def main(prgRun):
                 resetframe = frame
 
                 ##########################Correct frame###########################
+                K,D=cameraParamsPt3()
+                frame = cv2.undistort(frame, K, D, None, K)
 
                 ##########################Thresh frame###########################
                 grayframe = grayscale(frame)

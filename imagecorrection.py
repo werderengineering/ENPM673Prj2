@@ -10,15 +10,19 @@ def adjust_gamma(image, gamma):
     # apply gamma correction using the lookup table
     return cv2.LUT(image, table)
 
-def cameraParamsPt1():
+def cameraParamsPt2():
     # Camera Matrix
-    K=np.array([9.037596e+02,0.000000e+00,6.957519e+02,0.000000e+00,9.019653e+02, 2.242509e+02,0.000000e+00, 0.000000e+00,1.000000e+00])
+    K=np.array([
+        [9.037596e+02,0.000000e+00,6.957519e+02],
+        [0.000000e+00,9.019653e+02, 2.242509e+02],
+        [0.000000e+00, 0.000000e+00,1.000000e+00]
+    ])
     # distortion coefficients
     D=np.array([-3.639558e-01,1.788651e-01,6.029694e-04, -3.922424e-04, - 5.382460e-02])
 
     return K,D
 
-def cameraParamsPt2():
+def cameraParamsPt3():
     # Camera Matrix
     K =np.array([
         [1.15422732e+03,   0.00000000e+00,   6.71627794e+02],
