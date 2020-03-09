@@ -53,6 +53,7 @@ def main(prgRun):
             frame = adjustSaturation(frame, hue, sat)
             frame=adjustContrast(frame, contrast)
             frame = cv2.bilateralFilter(frame, 15, 75, 75)
+            frame = cv2.GaussianBlur(frame, (5, 5), 0)
 
             ###################Output Imagery##########################
             cv2.imshow('DWF', frame)
@@ -81,6 +82,7 @@ def main(prgRun):
             frame = cv2.undistort(frame, K, D, None, K)
             ##########################Thresh frame###########################
             grayframe=grayscale(frame)
+            frame = cv2.GaussianBlur(frame, (5, 5), 0)
             binaryframe = yellowAndWhite(frame)
             ############################Region ################
             region = process_image(binaryframe)
@@ -152,6 +154,7 @@ def main(prgRun):
 
                 ##########################Thresh frame###########################
                 grayframe = grayscale(frame)
+                frame = cv2.GaussianBlur(frame, (5, 5), 0)
                 binaryframe = yellowAndWhite(frame)
                 ############################Region ################
                 region = process_image(binaryframe)
